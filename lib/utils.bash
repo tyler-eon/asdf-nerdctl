@@ -42,7 +42,7 @@ download_release() {
 	#       to ensure nerdctl can run properly after installation.
 	url="$GH_REPO/releases/download/v${version}/nerdctl-full-${version}-linux-amd64.tar.gz"
 
-	echo "* Downloading $TOOL_NAME release $version..."
+	echo "* Downloading $TOOL_NAME release $version (this might take a while)..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
@@ -56,8 +56,13 @@ install_version() {
 	fi
 
 	(
+		echo "Installing $TOOL_NAME release $version..."
 		mkdir -p "$install_path"
 		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+
+		# Install rootless containerd (it's mostly the systemd stuff).
+		echo "Installing rootless containerd..."
+		$install_path/bin/containerd-rootless-setuptool.sh install || fail "Could not install rootless containerd."
 
 		# Assert nerdctl executable exists.
 		local tool_cmd
@@ -65,6 +70,9 @@ install_version() {
 		test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
+		echo "To use nerdctl, the containerd service must be running."
+		echo "To control 'containerd.service', run: `systemctl --user (start|stop|restart) containerd.service`"
+		echo "To run 'containerd.service' on system startup automatically, run: `sudo loginctl enable-linger <user>`"
 	) || (
 		rm -rf "$install_path"
 		fail "An error occurred while installing $TOOL_NAME $version."

@@ -18,6 +18,7 @@
 - `bash`
 - `curl`
 - `tar`
+- `newuidmap`/`newgidmap` (e.g. `sudo apt-get install -y uidmap`)
 
 # Install
 
@@ -45,7 +46,11 @@ asdf global nerdctl latest
 nerdctl version
 ```
 
-After installing a new version, you need to run `containerd-rootless-setuptool.sh` to ensure your environment is set up appropriately. If you are having trouble with the installation or `nerdctl` is failing for some reason, try look at this [Getting Started](https://rootlesscontaine.rs/getting-started/containerd/) guide.
+After the initial install, `containerd` should be running as a service and `nerdctl` should "just work". If it doesn't work then ensure the `containerd.service` is active and running (e.g. `systemctl --user status containerd.service`). If it is not active and running, try starting (or restarting) the service: e.g. `systemctl --user start containerd.service`.
+
+If you want `containerd.service` to always be running, use `sudo loginctl enable-linger <user>` after starting `containerd.service`.
+
+If `containerd.service` does not exist then installing the rootless containerd service failed silently for some reason. See this [Getting Started](https://rootlesscontaine.rs/getting-started/containerd/) guide for more information on how to ensure your system has the necessary dependencies installed and available.
 
 Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to install & manage versions.
 
