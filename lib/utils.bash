@@ -37,8 +37,10 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Support non-linux amd64 architectures
-	url="$GH_REPO/releases/download/v${version}/nerdctl-${version}-linux-amd64.tar.gz"
+	# TODO: Only linux-amd64 supports "full" releases, meaning nerdctl + critical dependencies.
+	#       If support for other architectures is added, we will need to do additional checks
+	#       to ensure nerdctl can run properly after installation.
+	url="$GH_REPO/releases/download/v${version}/nerdctl-full-${version}-linux-amd64.tar.gz"
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -62,9 +64,8 @@ install_version() {
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
 		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
 
-		# nerdctl comes with two additional executables for rootless container execution.
-		test -x "$install_path/containerd-rootless-setuptool.sh" || fail "Expected $install_path/containerd-rootless-setuptool.sh to be executable."
-		test -x "$install_path/containerd-rootless.sh" || fail "Expected $install_path/containerd-rootless.sh to be executable."
+		# Attempt to install rootless containerd
+		$install_path/containerd-rootless-setuptool.sh install || fail "Failed to install rootless containerd"
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
