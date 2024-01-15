@@ -62,7 +62,7 @@ install_version() {
 
 		# Install rootless containerd (it's mostly the systemd stuff).
 		echo "Installing rootless containerd..."
-		$install_path/bin/containerd-rootless-setuptool.sh install || fail "Could not install rootless containerd."
+		PATH="$install_path/bin:$PATH" $install_path/bin/containerd-rootless-setuptool.sh install || fail "Could not install rootless containerd."
 
 		# Assert nerdctl executable exists.
 		local tool_cmd
