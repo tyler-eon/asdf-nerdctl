@@ -15,7 +15,9 @@
 
 # Dependencies
 
-- `bash`, `curl`, `tar`.
+- `bash`
+- `curl`
+- `tar`
 
 # Install
 
@@ -27,7 +29,7 @@ asdf plugin add nerdctl
 asdf plugin add nerdctl https://github.com/tyler-eon/asdf-nerdctl.git
 ```
 
-nerdctl:
+Once the plugin is added, find a version and install it.
 
 ```shell
 # Show all installable versions
@@ -43,8 +45,9 @@ asdf global nerdctl latest
 nerdctl version
 ```
 
-Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to
-install & manage versions.
+After installing a new version, you need to run `containerd-rootless-setuptool.sh` to ensure your environment is set up appropriately. If you are having trouble with the installation or `nerdctl` is failing for some reason, try look at this [Getting Started](https://rootlesscontaine.rs/getting-started/containerd/) guide.
+
+Check [asdf](https://github.com/asdf-vm/asdf) readme for more instructions on how to install & manage versions.
 
 # Contributing
 
