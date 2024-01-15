@@ -70,9 +70,6 @@ install_version() {
 		test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
-		echo "To use nerdctl, the containerd service must be running."
-		echo "To control 'containerd.service', run: `systemctl --user (start|stop|restart) containerd.service`"
-		echo "To run 'containerd.service' on system startup automatically, run: `sudo loginctl enable-linger <user>`"
 	) || (
 		rm -rf "$install_path"
 		fail "An error occurred while installing $TOOL_NAME $version."
